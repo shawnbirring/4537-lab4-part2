@@ -1,11 +1,9 @@
 const http = require("http");
 const url = require("url");
 
-let wordDefinitions = [
-  {
-    word: "words defined",
-  },
-];
+let wordDefinitions = {
+  JSON: "JavaScript Object Notation, a lightweight data-interchange format.",
+};
 
 const server = http.createServer((req, res) => {
   const parsedUrl = url.parse(req.url, true);
