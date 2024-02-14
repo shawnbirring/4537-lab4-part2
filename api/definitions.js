@@ -29,14 +29,21 @@ const server = http.createServer((req, res) => {
       body += chunk.toString();
     });
     req.on("end", () => {
-      const { word, definition } = JSON.parse(body);
-      if (wordDefinitions[word]) {
+      try {
+        const { word, definition } = JSON.parse(body);
+        if (wordDefinitions[word]) {
+          res.writeHead(200, { "Content-Type": "application/json" });
+          res.end(
+            JSON.stringify({ message: "word already in", totalRequests })
+          );
+        } else {
+          wordDefinitions[word] = definition;
+          res.writeHead(200, { "Content-Type": "application/json" });
+          res.end(JSON.stringify({ word, definition, totalRequests }));
+        }
+      } catch (error) {
         res.writeHead(404, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ message: `Word already exists` }));
-      } else {
-        wordDefinitions[word] = definition;
-        res.writeHead(201, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ word, definition, totalRequests }));
+        res.end(JSON.stringify({ message: "cannot parse json" }));
       }
     });
   }
