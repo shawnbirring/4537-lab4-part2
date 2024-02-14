@@ -2,7 +2,7 @@ const http = require("http");
 const url = require("url");
 
 let wordDefinitions = {
-  JSON: "JavaScript Object Notation, a lightweight data-interchange format.",
+  json: "JavaScript Object Notation, a lightweight data-interchange format.",
 };
 
 const server = http.createServer((req, res) => {
