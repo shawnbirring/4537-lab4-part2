@@ -10,8 +10,7 @@ const server = http.createServer((req, res) => {
   if (req.method === "GET") {
     const word = parsedUrl.query.word;
     if (word) {
-      word = word.toLowerCase();
-      const definition = wordDefinitions[word];
+      const definition = wordDefinitions[word.toLowerCase()];
       res.writeHead(200, { "Content-Type": "application/json" });
       res.end(JSON.stringify({ word, definition }));
     } else {
