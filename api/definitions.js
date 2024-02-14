@@ -1,9 +1,7 @@
 const http = require("http");
 const url = require("url");
 
-let wordDefinitions = {
-  json: "JavaScript Object Notation, a lightweight data-interchange format.",
-};
+let wordDefinitions = {};
 let totalRequests = 0;
 
 const server = http.createServer((req, res) => {
