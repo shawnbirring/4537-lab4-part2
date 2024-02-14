@@ -17,7 +17,10 @@ const server = http.createServer((req, res) => {
     } else {
       res.writeHead(404, { "Content-Type": "application/json" });
       res.end(
-        JSON.stringify({ message: `No definition found for word: ${word}` })
+        JSON.stringify({
+          message: `No definition found for word: ${word}`,
+          totalRequests,
+        })
       );
     }
   } else if (req.method === "POST") {
@@ -41,7 +44,9 @@ const server = http.createServer((req, res) => {
         }
       } catch (error) {
         res.writeHead(404, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ message: "cannot parse json" }));
+        res.end(
+          JSON.stringify({ message: "cannot parse json", totalRequests })
+        );
       }
     });
   }
