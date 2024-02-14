@@ -37,7 +37,10 @@ const server = http.createServer((req, res) => {
       try {
         let { word, definition } = JSON.parse(body);
         word = word.toLowerCase();
-        if (wordDefinitions[word]) {
+        if (!word || word.length === 0 || !definition || definition.length === 0) {
+          res.writeHead(400, { "Content-Type": "application/json" });
+          res.end(JSON.stringify({ totalRequests }));
+        } else if (wordDefinitions[word]) {
           res.writeHead(200, { "Content-Type": "application/json" });
           res.end(JSON.stringify({ totalRequests }));
         } else {
