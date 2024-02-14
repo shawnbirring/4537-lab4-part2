@@ -1,7 +1,7 @@
 const http = require("http");
 const url = require("url");
 
-let wordDefinitions = {};
+let wordDefinitions = { alex: "a programmer" };
 let totalRequests = 0;
 
 const server = http.createServer((req, res) => {
@@ -16,16 +16,16 @@ const server = http.createServer((req, res) => {
     if (word) {
       word = word.toLowerCase();
       const definition = wordDefinitions[word];
-      res.writeHead(200, { "Content-Type": "application/json" });
-      res.end(JSON.stringify({ word, definition, totalRequests }));
+      if (definition) {
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ word, definition }));
+      } else {
+        res.writeHead(404, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ totalRequests }));
+      }
     } else {
       res.writeHead(404, { "Content-Type": "application/json" });
-      res.end(
-        JSON.stringify({
-          message: `No definition found for word: ${word}`,
-          totalRequests,
-        })
-      );
+      res.end(JSON.stringify({ totalRequests }));
     }
   } else if (req.method === "POST") {
     totalRequests++;
@@ -35,22 +35,19 @@ const server = http.createServer((req, res) => {
     });
     req.on("end", () => {
       try {
-        const { word, definition } = JSON.parse(body);
+        let { word, definition } = JSON.parse(body);
+        word = word.toLowerCase();
         if (wordDefinitions[word]) {
           res.writeHead(200, { "Content-Type": "application/json" });
-          res.end(
-            JSON.stringify({ message: "word already in", totalRequests })
-          );
+          res.end(JSON.stringify({ totalRequests }));
         } else {
           wordDefinitions[word] = definition;
           res.writeHead(200, { "Content-Type": "application/json" });
-          res.end(JSON.stringify({ word, definition, totalRequests }));
+          res.end(JSON.stringify({ word, definition }));
         }
       } catch (error) {
         res.writeHead(404, { "Content-Type": "application/json" });
-        res.end(
-          JSON.stringify({ message: "cannot parse json", totalRequests })
-        );
+        res.end(JSON.stringify({ totalRequests }));
       }
     });
   }
