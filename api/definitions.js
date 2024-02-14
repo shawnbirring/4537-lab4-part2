@@ -4,16 +4,18 @@ const url = require("url");
 let wordDefinitions = {
   json: "JavaScript Object Notation, a lightweight data-interchange format.",
 };
+let totalRequests = 0;
 
 const server = http.createServer((req, res) => {
   const parsedUrl = url.parse(req.url, true);
   if (req.method === "GET") {
+    totalRequests++;
     let word = parsedUrl.query.word;
     if (word) {
       word = word.toLowerCase();
       const definition = wordDefinitions[word];
       res.writeHead(200, { "Content-Type": "application/json" });
-      res.end(JSON.stringify({ word, definition }));
+      res.end(JSON.stringify({ word, definition, totalRequests }));
     } else {
       res.writeHead(404, { "Content-Type": "application/json" });
       res.end(
@@ -21,8 +23,22 @@ const server = http.createServer((req, res) => {
       );
     }
   } else if (req.method === "POST") {
-    res.writeHead(200, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({ message: "post" }));
+    totalRequests++;
+    let body = "";
+    req.on("data", (chunk) => {
+      body += chunk.toString();
+    });
+    req.on("end", () => {
+      const { word, definition } = JSON.parse(body);
+      if (wordDefinitions[word]) {
+        res.writeHead(404, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ message: `Word already exists` }));
+      } else {
+        wordDefinitions[word] = definition;
+        res.writeHead(201, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ word, definition, totalRequests }));
+      }
+    });
   }
 });
 
