@@ -3,8 +3,7 @@ const url = require("url");
 
 let wordDefinitions = [
   {
-    word: "word",
-    definition: "a word or something.",
+    word: "words defined",
   },
 ];
 
