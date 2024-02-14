@@ -5,6 +5,10 @@ let wordDefinitions = {};
 let totalRequests = 0;
 
 const server = http.createServer((req, res) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
   const parsedUrl = url.parse(req.url, true);
   if (req.method === "GET") {
     totalRequests++;
