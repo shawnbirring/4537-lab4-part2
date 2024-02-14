@@ -40,7 +40,7 @@ const server = http.createServer((req, res) => {
         // used gpt here to check if there are numbers in the word or definition
         const hasNumbers = /\d/;
         if (!word || word.length === 0 || !definition || definition.length === 0 || hasNumbers.test(word) || hasNumbers.test(definition)) {
-          res.writeHead(400, { "Content-Type": "application/json" });
+          res.writeHead(404, { "Content-Type": "application/json" });
           res.end(JSON.stringify({ totalRequests }));
         } else if (wordDefinitions[word]) {
           res.writeHead(200, { "Content-Type": "application/json" });
