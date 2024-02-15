@@ -43,7 +43,7 @@ const server = http.createServer((req, res) => {
           res.writeHead(404, { "Content-Type": "application/json" });
           res.end(JSON.stringify({ totalRequests }));
         } else if (wordDefinitions[word]) {
-          res.writeHead(200, { "Content-Type": "application/json" });
+          res.writeHead(404, { "Content-Type": "application/json" });
           res.end(JSON.stringify({ totalRequests }));
         } else {
           wordDefinitions[word] = definition;
